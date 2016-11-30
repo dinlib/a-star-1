@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/pauloalexandrepiornedopanucci/Desktop/a-star/main.cpp
+iostream
+-
+set
+-
+array
+-
+queue
+-
+sstream
+-
+unordered_set
+-
+

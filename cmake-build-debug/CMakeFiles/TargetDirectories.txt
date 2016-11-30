@@ -1,0 +1,3 @@
+/Users/pauloalexandrepiornedopanucci/Desktop/a-star/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/pauloalexandrepiornedopanucci/Desktop/a-star/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/pauloalexandrepiornedopanucci/Desktop/a-star/cmake-build-debug/CMakeFiles/a_star.dir
