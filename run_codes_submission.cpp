@@ -1,8 +1,8 @@
 #include <iostream>
 #include <sstream>
 #include <queue>
-// #include <tr1/unordered_map>
-#include <unordered_map>
+#include <tr1/unordered_map>
+// #include <unordered_map>
 #include <string.h>
 #include <set>
 #include <map>
@@ -49,8 +49,8 @@ std::string generate_hash_key(int board [][4]){
     return hash_key.str();
 }
 
-// typedef std::tr1::unordered_map<std::string, state> hash_table;
-typedef std::unordered_map<std::string, state> hash_table;
+typedef std::tr1::unordered_map<std::string, state> hash_table;
+// typedef std::unordered_map<std::string, state> hash_table;
 typedef std::multiset<state, state_cmp> mset;
 typedef mset::iterator set_it;
 typedef hash_table::iterator hash_it;
@@ -66,28 +66,37 @@ typedef struct OpenCustom{
     }
 
     void remove(hash_it it){
-        open_set.erase(it->second);
-        open_hash.erase(it);
+        state st = it->second;
+        std::string backup_key = it->first;
+        open_set.erase(st);
+        open_hash.erase(backup_key);
     }
 
     state extract_min(){
         set_it it = open_set.begin();
+        state st = *it;
+        std::string backup_key = it->hash_key;
         open_set.erase(it);
-        open_hash.erase(it->hash_key);
-        return *it;
+        open_hash.erase(backup_key);
+
+        return st;
     }
 
     hash_it find(std::string hash_key){
         return open_hash.find(hash_key);
     }
 
+    hash_it begin(){
+        return open_hash.begin();
+    }
+
     hash_it end(){
         return open_hash.end();
     }
 
-     bool empty(){
-         return open_hash.empty();
-     }
+    bool empty(){
+        return open_hash.empty();
+    }
 
 } OpenCustom;
 
@@ -140,11 +149,9 @@ int heuristic_3(int board[][4]){ //HEURISTIC 3
     int heuristic = 0;
     for(int i = 0; i < 4; ++i) {
         for (int j = 0; j < 4; ++j) {
-            if(i != 0 || j != 0){
-                if (board[i][j] != solution[i][j]){
-                    std::pair<int, int> correct_pos = correct_board_place[board[i][j]];
-                    heuristic += (abs(correct_pos.first - i) + abs(correct_pos.second - j));
-                }
+            if (board[i][j] != solution[i][j]){
+                std::pair<int, int> correct_pos = correct_board_place[board[i][j]];
+                heuristic += (abs(correct_pos.first - i) + abs(correct_pos.second - j));
             }
         }
     }
@@ -303,14 +310,17 @@ int a_star(int board[][4]){
 }
 
 
-int main() {
+int main(int argc, char *argv[]) {
     int initial_board[4][4];
+    int count = 1;
     for (int i = 0; i < 4; ++i) {
         for (int j = 0; j < 4; ++j) {
-           std::cin >> initial_board[i][j];
+          initial_board[i][j] = atoi(argv[count]);
+          count++;
+          // std::cin >> initial_board[i][j];
         }
     }
     int solution = a_star(initial_board);
-    std::cout << solution;
+    std::cout << solution << std::endl;
     return 0;
 }

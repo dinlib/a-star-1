@@ -56,6 +56,18 @@ std::string generate_hash_key(int board [][4]){
     return hash_key;
 }
 
+void print_matrix(int matrix[][4]){
+    for (int i = 0; i < 4; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            std::cout << matrix[i][j] << " ";
+        }
+        std::cout << "\n";
+    }
+    std::cout << "\n";
+    std::cout << "\n";
+}
+
+
 typedef std::unordered_map<std::string, state> hash_table;
 typedef std::multiset<state, state_cmp> mset;
 typedef mset::iterator set_it;
@@ -72,19 +84,28 @@ typedef struct OpenCustom{
     }
 
     void remove(hash_it it){
-        open_set.erase(it->second);
-        open_hash.erase(it);
+        state st = it->second;
+        std::string backup_key = it->first;
+        open_set.erase(st);
+        open_hash.erase(backup_key);
     }
 
     state extract_min(){
         set_it it = open_set.begin();
+        state st = *it;
+        std::string backup_key = it->hash_key;
         open_set.erase(it);
-        open_hash.erase(it->hash_key);
-        return *it;
+        open_hash.erase(backup_key);
+
+        return st;
     }
 
     hash_it find(std::string hash_key){
         return open_hash.find(hash_key);
+    }
+
+    hash_it begin(){
+        return open_hash.begin();
     }
 
     hash_it end(){
@@ -111,7 +132,7 @@ bool check_solution(int matrix[][4]){
 
 
 
-int heuristic_1(int board[][4]){ //HEURISTIC 1
+int heuristic(int board[][4]){ //HEURISTIC 1
     int heuristic = 0;
     for(int i = 0; i < 4; ++i) {
         for (int j = 0; j < 4; ++j) {
@@ -144,7 +165,7 @@ int heuristic_2(int board[][4]){ //HEURISTIC 2
     return heuristic;
 }
 
-int heuristic(int board[][4]){ //HEURISTIC 3
+int heuristic_3(int board[][4]){ //HEURISTIC 3
     int heuristic = 0;
     for(int i = 0; i < 4; ++i) {
         for (int j = 0; j < 4; ++j) {
@@ -176,17 +197,6 @@ int heuristic(int board[][4]){ //HEURISTIC 3
 //    int h3 = heuristic_3(board);
 //    return std::max(h1, std::max(h2, h3));
 //}
-
-void print_matrix(int matrix[][4]){
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 4; ++j) {
-            std::cout << matrix[i][j] << " ";
-        }
-        std::cout << "\n";
-    }
-    std::cout << "\n";
-    std::cout << "\n";
-}
 
 void copy_board(int origin[4][4], int destiny[4][4]){
     for (int i = 0; i < 4; ++i) {
@@ -299,14 +309,19 @@ int a_star(int board[][4]){
     //A-Star Algorithm begin
     open.insert(&beggin_state);
     while(!open.empty()){
+
+        hash_it open_it;
+        hash_it closed_it;
+
+//        std::cout << "to preso aqui" << std::endl;
 //        std::cout << "-------------------- PHASE " << fase << " --------------------" << std::endl;
 //        //DEPURACAO LISTA ABERTO E FECHADOS
 //        std::cout << "\tOPEN SET" << std::endl;
 //        for(open_it = open.begin(); open_it != open.end(); open_it++){
-//            std::cout << "Steps: " << open_it->steps << std::endl << "Heuristic: " << open_it->heuristic << std::endl << "Board:" << std::endl;
+//            std::cout << "Steps: " << open_it->second.steps << std::endl << "Heuristic: " << open_it->second.heuristic << std::endl << "Board:" << std::endl;
 //            for (int i = 0; i < 4; ++i) {
 //                for (int j = 0; j < 4; ++j) {
-//                    std::cout << open_it->board[i][j] << " ";
+//                    std::cout << open_it->second.board[i][j] << " ";
 //                }
 //                std::cout << "\n";
 //            }
@@ -316,10 +331,10 @@ int a_star(int board[][4]){
 //
 //        std::cout << "\tCLOSED SET" << std::endl;
 //        for(closed_it = closed.begin(); closed_it != closed.end(); closed_it++){
-//            std::cout << "Steps: " << closed_it->steps << std::endl << "Heuristic: " << closed_it->heuristic << std::endl << "Board:" << std::endl;
+//            std::cout << "Steps: " << closed_it->second.steps << std::endl << "Heuristic: " << closed_it->second.heuristic << std::endl << "Board:" << std::endl;
 //            for (int i = 0; i < 4; ++i) {
 //                for (int j = 0; j < 4; ++j) {
-//                    std::cout << closed_it->board[i][j] << " ";
+//                    std::cout << closed_it->second.board[i][j] << " ";
 //                }
 //                std::cout << "\n";
 //            }
@@ -331,8 +346,16 @@ int a_star(int board[][4]){
         closed[st.hash_key] = st;
 
 //        std::cout << "EXTRACTED FROM OPEN:" << std::endl;
+//        std::cout << st.board[3][3]  << std::endl;
 //        std::cout << "Steps: " << st.steps << std::endl << "Heuristic: " << st.heuristic << std::endl << "Board:" << std::endl;
-//        print_matrix(st.board);
+//        for (int i = 0; i < 4; ++i) {
+//            for (int j = 0; j < 4; ++j) {
+//                std::cout << st.board[i][j] << " ";
+//            }
+//            std::cout << "\n";
+//        }
+//        std::cout << "\n";
+//        std::cout << "\n";
 
         if(check_solution(st.board)){
             std::cout << "SOLUTION" << std::endl;
@@ -351,8 +374,8 @@ int a_star(int board[][4]){
 //            print_matrix(suc.board);
 
 
-            hash_it open_it = open.find(suc.hash_key);
-            hash_it closed_it = closed.find(suc.hash_key);
+            open_it = open.find(suc.hash_key);
+            closed_it = closed.find(suc.hash_key);
             if(open_it != open.end()){
                 if(suc.steps < open_it->second.steps){
                     open.remove(open_it);
@@ -371,6 +394,7 @@ int a_star(int board[][4]){
             sucessors.pop();
         }
         fase++;
+        //std::cin.get();
     }
     return 0;
 }
@@ -382,8 +406,8 @@ int main(int argc, char *argv[]) {
     int initial_board[4][4];
     for (int i = 0; i < 4; ++i) {
         for (int j = 0; j < 4; ++j) {
-//            initial_board[i][j] = atoi(argv[count]);
-//            count++;
+//           initial_board[i][j] = atoi(argv[count]);
+//           count++;
             std::cin >> initial_board[i][j];
         }
     }
