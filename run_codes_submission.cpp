@@ -1,8 +1,8 @@
 #include <iostream>
 #include <sstream>
 #include <queue>
-#include <tr1/unordered_map>
-// #include <unordered_map>
+// #include <tr1/unordered_map>
+#include <unordered_map>
 #include <string.h>
 #include <set>
 #include <map>
@@ -20,6 +20,12 @@ std::pair<int,int> correct_board_place[16] = { std::make_pair(3, 3), std::make_p
                                                std::make_pair(1, 3), std::make_pair(2, 0), std::make_pair(2, 1), std::make_pair(2, 2),
                                                std::make_pair(2, 3), std::make_pair(3, 0), std::make_pair(3, 1), std::make_pair(3, 2)
                                             };
+
+std::pair<int,int> board_places[16] = { std::make_pair(0, 0), std::make_pair(0, 1), std::make_pair(0, 2), std::make_pair(0, 3),
+                                        std::make_pair(1, 0), std::make_pair(1, 1), std::make_pair(1, 2), std::make_pair(1, 3),
+                                        std::make_pair(2, 0), std::make_pair(2, 1), std::make_pair(2, 2), std::make_pair(2, 3),
+                                        std::make_pair(3, 0), std::make_pair(3, 1), std::make_pair(3, 2), std::make_pair(3, 3)
+                                      };
 
 
 typedef struct state {
@@ -40,8 +46,8 @@ struct state_cmp {
 
 std::string generate_hash_key(int board [][4]){
     std::ostringstream hash_key;
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 4; ++j) {
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
             if(board[i][j] < 10) hash_key << 0;
             hash_key << board[i][j];
         }
@@ -49,8 +55,8 @@ std::string generate_hash_key(int board [][4]){
     return hash_key.str();
 }
 
-typedef std::tr1::unordered_map<std::string, state> hash_table;
-// typedef std::unordered_map<std::string, state> hash_table;
+// typedef std::tr1::unordered_map<std::string, state> hash_table;
+typedef std::unordered_map<std::string, state> hash_table;
 typedef std::multiset<state, state_cmp> mset;
 typedef mset::iterator set_it;
 typedef hash_table::iterator hash_it;
@@ -101,8 +107,8 @@ typedef struct OpenCustom{
 } OpenCustom;
 
 bool check_solution(int matrix[][4]){
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 4; ++j) {
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
             if(matrix[i][j] != solution[i][j]){
                 return false;
             }
@@ -111,11 +117,12 @@ bool check_solution(int matrix[][4]){
     return true;
 }
 
+//****HEURISTICS****
 
-int heuristic(int board[][4]){ //HEURISTIC 1
+int heuristic_1(int board[][4]){ //HEURISTIC 1
     int heuristic = 0;
-    for(int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 4; ++j) {
+    for(int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
             if (board[i][j] != solution[i][j]){
                 heuristic++;
             }
@@ -124,34 +131,30 @@ int heuristic(int board[][4]){ //HEURISTIC 1
     return heuristic;
 }
 
-int heuristic_2(int board[][4]){ //HEURISTIC 2
-
+int heuristic(int board[][4]){ //HEURISTIC 2
     int heuristic = 0;
-    int current;
-    int last = board[0][1];
-    for(int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 4; ++j) {
-            current = board[i][j];
-            if(i != 0 || j != 0){
-                if (current != last + 1 && (last != 0) ){
-                    heuristic++;
-                }
-            }
-
-            last = current;
-        }
+    for(int i = 1; i < 16; i++) {
+        std::pair<int, int> last = board_places[i - 1];
+        std::pair<int, int> current = board_places[i];
+        if(board[current.first][current.second] != board[last.first][last.second] + 1)
+          if(board[last.first][last.second] != 0)
+              heuristic++;
     }
-    if(board[4 - 1][4 - 1] == 0) heuristic--;
+    if(board[3][3] == 0) heuristic--;
     return heuristic;
+}
+
+int manhattan_distance(int index, int r, int c){
+    std::pair<int, int> correct_pos = correct_board_place[index];
+    return (abs(correct_pos.first - r) + abs(correct_pos.second - c));
 }
 
 int heuristic_3(int board[][4]){ //HEURISTIC 3
     int heuristic = 0;
-    for(int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 4; ++j) {
-            if (board[i][j] != solution[i][j]){
-                std::pair<int, int> correct_pos = correct_board_place[board[i][j]];
-                heuristic += (abs(correct_pos.first - i) + abs(correct_pos.second - j));
+    for(int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            if(board[i][j] != solution[i][j]){
+              heuristic += manhattan_distance(board[i][j], i, j);
             }
         }
     }
@@ -177,8 +180,8 @@ int heuristic_3(int board[][4]){ //HEURISTIC 3
 
 
 void copy_board(int origin[4][4], int destiny[4][4]){
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 4; ++j) {
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
             destiny[i][j] = origin[i][j];
         }
     }
@@ -311,10 +314,24 @@ int a_star(int board[][4]){
 
 
 int main(int argc, char *argv[]) {
+
+    // std::pair<int, int> test;
+    // for (size_t i = 0; i < 16; i++) {
+    //   test = correct_board_place[i];
+    //   std::cout << "Tile[" << i << "] = " << test.first << " " << test.second << std::endl;
+    // }
+
+    // for (size_t i = 0; i < 4; i++) {
+    //   for (size_t j = 0; j < 4; j++) {
+    //     std::cout << solution[i][j] << std::endl;
+    //   }
+    // }
+
+
     int initial_board[4][4];
     int count = 1;
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 4; ++j) {
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
           initial_board[i][j] = atoi(argv[count]);
           count++;
           // std::cin >> initial_board[i][j];

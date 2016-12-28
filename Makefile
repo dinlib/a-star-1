@@ -54,9 +54,9 @@ rcodes:
 	@echo -n "answer = "
 	@time ./a.out 5 1 2 3 6 7 11 4 13 9 10 8 14 15 12 0
 	@echo
-	@echo "CASE 3 ------------------------- EXPECTED 23"
-	@echo -n "answer = "
-	@time ./a.out 6 5 1 2 0 7 11 3 13 9 10 4 14 15 12 8
+	#@echo "CASE 3 ------------------------- EXPECTED 23"
+	#@echo -n "answer = "
+	#@time ./a.out 6 5 1 2 0 7 11 3 13 9 10 4 14 15 12 8
 	@echo
 	@echo "CASE 4 ------------------------- EXPECTED 33"
 	@echo -n "answer = "
