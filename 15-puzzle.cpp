@@ -139,10 +139,10 @@ int heuristic_2(int board[][4]){ //HEURISTIC 2
         std::pair<int, int> last = board_places[i - 1];
         std::pair<int, int> current = board_places[i];
         if(board[current.first][current.second] != board[last.first][last.second] + 1)
-        if(board[last.first][last.second] != 0)
-        heuristic++;
+            if(board[last.first][last.second] != 0)
+                if(!(board[last.first][last.second] == 15 && board[current.first][current.second] == 0))
+                    heuristic++;
     }
-    if(board[3][3] == 0) heuristic--;
     return heuristic;
 }
 

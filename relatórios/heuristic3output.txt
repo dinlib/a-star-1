@@ -1,0 +1,49 @@
+CASE 1 ------------------------- EXPECTED 21
+answer = 21
+0.00user 0.00system 0:00.00elapsed 0%CPU (0avgtext+0avgdata 3068maxresident)k
+0inputs+0outputs (0major+125minor)pagefaults 0swaps
+
+CASE 2 ------------------------- EXPECTED 53
+answer = 53
+43.54user 0.48system 0:44.12elapsed 99%CPU (0avgtext+0avgdata 1629516maxresident)k
+0inputs+0outputs (0major+387318minor)pagefaults 0swaps
+
+CASE 3 ------------------------- EXPECTED 53
+answer = 53
+51.87user 0.60system 0:52.67elapsed 99%CPU (0avgtext+0avgdata 1923944maxresident)k
+0inputs+0outputs (0major+453586minor)pagefaults 0swaps
+
+CASE 4 ------------------------- EXPECTED 53
+answer = 53
+44.03user 0.45system 0:44.49elapsed 99%CPU (0avgtext+0avgdata 1693160maxresident)k
+0inputs+0outputs (0major+404187minor)pagefaults 0swaps
+
+CASE 5 ------------------------- EXPECTED 50
+answer = 50
+31.67user 0.35system 0:32.02elapsed 99%CPU (0avgtext+0avgdata 1238868maxresident)k
+0inputs+0outputs (0major+298475minor)pagefaults 0swaps
+
+CASE 6 ------------------------- EXPECTED 50
+answer = 50
+109.34user 1.13system 1:50.48elapsed 99%CPU (0avgtext+0avgdata 3994376maxresident)k
+0inputs+0outputs (0major+936763minor)pagefaults 0swaps
+
+CASE 7 ------------------------- EXPECTED 50
+answer = 50
+68.63user 0.68system 1:09.32elapsed 99%CPU (0avgtext+0avgdata 2533656maxresident)k
+0inputs+0outputs (0major+604975minor)pagefaults 0swaps
+
+CASE 8 ------------------------- EXPECTED 53
+answer = 53
+153.26user 1.44system 2:34.73elapsed 99%CPU (0avgtext+0avgdata 5444532maxresident)k
+0inputs+0outputs (0major+1299255minor)pagefaults 0swaps
+
+CASE 9 ------------------------- EXPECTED 53
+answer = 53
+65.04user 0.77system 1:05.82elapsed 99%CPU (0avgtext+0avgdata 2434480maxresident)k
+472inputs+0outputs (2major+580650minor)pagefaults 0swaps
+
+CASE 10 ------------------------- EXPECTED 56
+answer = 56
+109.90user 1.18system 1:51.24elapsed 99%CPU (0avgtext+0avgdata 3995948maxresident)k
+0inputs+0outputs (0major+936116minor)pagefaults 0swaps

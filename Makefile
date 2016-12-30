@@ -8,7 +8,7 @@ compile_runcodes:
 	g++ -std=c++11 15-puzzle.cpp -o a.out -Wall
 
 tests:
-	@echo "MOA REPORT - 15 PUZZLE A* TESTS"
+	@echo "MOA REPORT - 15 PUZZLE A* TESTS - HEURISTICS 1"
 	@echo
 	@echo "CASE 1 ------------------------- EXPECTED 21"
 	@echo -n "answer = "
@@ -30,7 +30,7 @@ tests:
 	@echo -n "answer = "
 	@time ./a.out 9 2 1 11 3 8 5 14 6 4 13 15 7 10 12 0
 	@echo
-	@echo "CASE 6 ------------------------- EXPECTED ?"
+	@echo "CASE 6 ------------------------- EXPECTED 50"
 	@echo -n "answer = "
 	@time ./a.out 0 2 1 11 9 3 8 5 7 6 4 14 10 12 15 13
 	@echo
@@ -38,7 +38,7 @@ tests:
 	@echo -n "answer = "
 	@time ./a.out 2 3 11 5 9 6 1 14 7 12 8 13 10 15 4 0
 	@echo
-	@echo "CASE 8 ------------------------- EXPECTED ?"
+	@echo "CASE 8 ------------------------- EXPECTED 53"
 	@echo -n "answer = "
 	@time ./a.out 3 11 5 0 2 6 1 14 9 12 8 13 7 10 15 4
 	@echo
@@ -46,7 +46,7 @@ tests:
 	@echo -n "answer = "
 	@time ./a.out 3 11 5 14 0 2 6 1 12 8 4 13 9 7 10 15
 	@echo
-	@echo "CASE 10 ------------------------- EXPECTED ?"
+	@echo "CASE 10 ------------------------- EXPECTED 56"
 	@echo -n "answer = "
 	@time ./a.out 11 5 14 1 3 2 6 13 0 8 4 15 12 9 7 10
 
