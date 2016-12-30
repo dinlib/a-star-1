@@ -4,11 +4,8 @@ runcodes: compile_runcodes rcodes
 
 report: compile_runcodes tests
 
-compile_normal:
-	g++ -std=c++11 main.cpp -o a.out -Wall
-
 compile_runcodes:
-	g++ -std=c++11 run_codes_submission.cpp -o a.out -Wall
+	g++ -std=c++11 15-puzzle.cpp -o a.out -Wall
 
 tests:
 	@echo "MOA REPORT - 15 PUZZLE A* TESTS"

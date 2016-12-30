@@ -7,6 +7,7 @@
 #include <set>
 #include <map>
 #include <stdlib.h>
+typedef unsigned long long ull;
 
 int solution[4][4] =  {
     {1, 2, 3, 4},
@@ -15,7 +16,6 @@ int solution[4][4] =  {
     {13, 14, 15, 0}
 };
 
-std::string strsolution = "01020304050607080910111213141500";
 
 std::pair<int,int> correct_board_place[16] = {
     std::make_pair(3, 3), std::make_pair(0, 0), std::make_pair(0, 1), std::make_pair(0, 2),
@@ -33,7 +33,7 @@ std::pair<int,int> board_places[16] = {
 
 typedef struct state {
     // state *parent;
-    std::string hash_key;
+    ull hash_key;
     int f;
     int steps;
     int heuristic;
@@ -47,19 +47,21 @@ struct state_cmp {
     }
 };
 
-std::string generate_hash_key(int board [][4]){
-    std::ostringstream hash_key;
+ull generate_hash_key(int board [][4]){
+    ull hash_key = 0;
+    int count = 0;
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
-            if(board[i][j] < 10) hash_key << 0;
-            hash_key << board[i][j];
+            ull input = board[i][j];
+            hash_key += input << (count * 4);
+            count++;
         }
     }
-    return hash_key.str();
+    return hash_key;
 }
 
-typedef std::tr1::unordered_map<std::string, state> hash_table;
-// typedef std::unordered_map<std::string, state> hash_table;
+typedef std::tr1::unordered_map<ull, state> hash_table;
+// typedef std::unordered_map<ull, state> hash_table;
 typedef std::multiset<state, state_cmp> mset;
 typedef mset::iterator set_it;
 typedef hash_table::iterator hash_it;
@@ -76,7 +78,7 @@ typedef struct OpenCustom{
 
     void remove(hash_it it){
         state st = it->second;
-        std::string backup_key = it->first;
+        ull backup_key = it->first;
         open_set.erase(st);
         open_hash.erase(backup_key);
     }
@@ -84,14 +86,15 @@ typedef struct OpenCustom{
     state extract_min(){
         set_it it = open_set.begin();
         state st = *it;
-        std::string backup_key = it->hash_key;
+        ull backup_key = it->hash_key;
         open_set.erase(it);
         open_hash.erase(backup_key);
         return st;
     }
 
-    hash_it find(std::string hash_key){
-        return open_hash.find(hash_key);
+    hash_it find(ull hash_key){
+        hash_it it = open_hash.find(hash_key);
+        return it;
     }
 
     hash_it begin(){
@@ -112,18 +115,9 @@ typedef struct OpenCustom{
 
 } OpenCustom;
 
-//CHECK 15-PUZZLE SOLUTION
-bool check_solution(std::string board){
-    // for (int i = 0; i < 4; i++) {
-    //     for (int j = 0; j < 4; j++) {
-    //         if(matrix[i][j] != solution[i][j]){
-    //             return false;
-    //         }
-    //     }
-    // }
-    // return true;
-    if(board.compare(strsolution) == 0) return true;
-    else return false;
+
+bool check_solution(ull board){
+    return board == 0x0fedcba987654321ull;
 }
 
 //HEURISTICS
@@ -172,7 +166,7 @@ int heuristic(int board[][4]){ //HEURISTIC 3
     return heuristic;
 }
 
-// int heuristic(int board[][4]){ //HEURISTIC 4
+// int heuristic_4(int board[][4]){ //HEURISTIC 4
 //     int h1 = heuristic_1(board);
 //     int h2 = heuristic_2(board);
 //     int h3 = heuristic_3(board);
@@ -189,16 +183,9 @@ int heuristic(int board[][4]){ //HEURISTIC 3
 //     return std::max(h1, std::max(h2, h3));
 // }
 
-
 void copy_board(int origin[][4], int destiny[][4]){
-    // for (int i = 0; i < 4; i++) {
-    //     for (int j = 0; j < 4; j++) {
-    //         destiny[i][j] = origin[i][j];
-    //     }
-    // }
      memcpy(destiny, origin, 4*4*sizeof(int));
 }
-
 
 std::queue<state> generate_sucessors(state st){
     std::queue<state> sucessors;
@@ -215,8 +202,6 @@ std::queue<state> generate_sucessors(state st){
                     up.board[i][j] = up.board[i - 1][j];
                     up.board[i - 1][j] = aux;
 
-                    // up.heuristic = heuristic(up.board);
-                    // up.f = up.steps + up.heuristic;
                     up.hash_key = generate_hash_key(up.board);
                     sucessors.push(up);
                 }
@@ -231,8 +216,6 @@ std::queue<state> generate_sucessors(state st){
                     down.board[i][j] = down.board[i + 1][j];
                     down.board[i + 1][j] = aux;
 
-                    // down.heuristic = heuristic(down.board);
-                    // down.f = down.steps + down.heuristic;
                     down.hash_key = generate_hash_key(down.board);
                     sucessors.push(down);
                 }
@@ -246,8 +229,6 @@ std::queue<state> generate_sucessors(state st){
                     left.board[i][j] = left.board[i][j - 1];
                     left.board[i][j - 1] = aux;
 
-                    // left.heuristic = heuristic(left.board);
-                    // left.f = left.steps + left.heuristic;
                     left.hash_key = generate_hash_key(left.board);
                     sucessors.push(left);
                 }
@@ -261,8 +242,6 @@ std::queue<state> generate_sucessors(state st){
                     right.board[i][j] = right.board[i][j + 1];
                     right.board[i][j + 1] = aux;
 
-                    // right.heuristic = heuristic(right.board);
-                    // right.f = right.steps + right.heuristic;
                     right.hash_key = generate_hash_key(right.board);
                     sucessors.push(right);
                 }
@@ -287,16 +266,19 @@ int a_star(int board[][4]){
     OpenCustom open;
     hash_table closed;
 
-    // int phase = 0;
-
     //A-STAR ALGORITHM BEGIN
     open.insert(&begin_state);
     while(!open.empty()){
 
+        hash_it open_it;
+        hash_it closed_it;
+
+
         state st = open.extract_min();
         closed[st.hash_key] = st;
 
-        if(check_solution(st.hash_key)){
+
+        if(st.hash_key == 0x0fedcba987654321ull){
             return st.steps;
         }
 
@@ -304,22 +286,23 @@ int a_star(int board[][4]){
 
         while(!sucessors.empty()) {
             state suc = sucessors.front();
-            hash_it open_it = open.find(suc.hash_key);
-            hash_it closed_it = closed.find(suc.hash_key);
-            bool isInOpen = (open_it != open.end());
-            bool isInClosed = (closed_it != closed.end());
+
+            hash_it oit = open.find(suc.hash_key);
+            hash_it cit = closed.find(suc.hash_key);
+            bool isInOpen = (oit != open.end());
+            bool isInClosed = (cit != closed.end());
 
             if(isInClosed){
-                if(suc.steps < closed_it->second.steps){
-                    closed.erase(closed_it);
+                if(suc.steps < cit->second.steps){
+                    closed.erase(cit);
                     suc.heuristic = heuristic(suc.board);
                     suc.f = suc.steps + suc.heuristic;
                     open.insert(&suc);
                 }
             }
             else if(isInOpen){
-                if(suc.steps < open_it->second.steps){
-                    open.remove(open_it);
+                if(suc.steps < oit->second.steps){
+                    open.remove(oit);
                     suc.heuristic = heuristic(suc.board);
                     suc.f = suc.steps + suc.heuristic;
                     open.insert(&suc);
@@ -330,36 +313,6 @@ int a_star(int board[][4]){
                 suc.f = suc.steps + suc.heuristic;
                 open.insert(&suc);
             }
-
-            // if(isInOpen && (suc.steps < open_it->second.steps)){
-            //     open.remove(open_it);
-            // }
-            // if(isInClosed && (suc.steps < closed_it->second.steps)){
-            //     closed.erase(closed_it);
-            // }
-            // if(!(isInOpen || isInClosed)){
-            //     suc.heuristic = heuristic(suc.board);
-            //     suc.f = suc.steps + suc.heuristic;
-            //     open.insert(&suc);
-            // }
-
-            // if(!isInClosed){
-            //     if(isInOpen){
-            //         if(suc.steps < open_it->second.steps){
-            //             open.remove(open_it);
-            //             suc.heuristic = heuristic(suc.board);
-            //             suc.f = suc.steps + suc.heuristic;
-            //             open.insert(&suc);
-            //         }
-            //     }
-            //     else {
-            //         suc.heuristic = heuristic(suc.board);
-            //         suc.f = suc.steps + suc.heuristic;
-            //         open.insert(&suc);
-            //     }
-            // }
-
-
             sucessors.pop();
         }
     }
@@ -377,7 +330,7 @@ int main(int argc, char *argv[]) {
             // std::cin >> initial_board[i][j];
         }
     }
-    int solution = a_star(initial_board);
-    std::cout << solution << std::endl;
+    int answer = a_star(initial_board);
+    std::cout << answer << std::endl;
     return 0;
 }
