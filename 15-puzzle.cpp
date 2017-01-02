@@ -121,12 +121,13 @@ bool check_solution(ull board){
 }
 
 //HEURISTICS
-int heuristic(int board[][4]){ //HEURISTIC 1
+int heuristic_1(int board[][4]){ //HEURISTIC 1
     int heuristic = 0;
     for(int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
             if (board[i][j] != solution[i][j]){
-                heuristic++;
+                if(board[i][j] != 0)
+                    heuristic++;
             }
         }
     }
