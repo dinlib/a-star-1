@@ -121,7 +121,7 @@ bool check_solution(ull board){
 }
 
 //HEURISTICS
-int heuristic_1(int board[][4]){ //HEURISTIC 1
+int heuristic(int board[][4]){ //HEURISTIC 1
     int heuristic = 0;
     for(int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
@@ -152,7 +152,7 @@ int manhattan_distance(int index, int r, int c){
     return manhattan_distance;
 }
 
-int heuristic(int board[][4]){ //HEURISTIC 3
+int heuristic_3(int board[][4]){ //HEURISTIC 3
     int heuristic = 0;
     for(int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {

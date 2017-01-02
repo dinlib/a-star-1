@@ -1,3 +1,5 @@
+MOA REPORT - 15 PUZZLE A* TESTS - HEURISTICS 3
+
 CASE 1 ------------------------- EXPECTED 21
 answer = 21
 0.00user 0.00system 0:00.00elapsed 0%CPU (0avgtext+0avgdata 3068maxresident)k
