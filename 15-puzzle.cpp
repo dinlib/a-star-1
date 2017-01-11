@@ -171,9 +171,9 @@ int heuristic_3(int board[][4]){ //HEURISTIC 3
 //     int h1 = heuristic_1(board);
 //     int h2 = heuristic_2(board);
 //     int h3 = heuristic_3(board);
-//     int p1 = 0;
-//     int p2 = 0;
-//     int p3 = 1;
+//     float p1 = 0.05;
+//     float p2 = 0.05;
+//     float p3 = 0.9;
 //     return p1*h1 + p2*h2 + p3*h3;
 // }
 
