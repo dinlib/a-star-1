@@ -1,8 +1,8 @@
 #include <iostream>
 #include <sstream>
 #include <queue>
-#include <tr1/unordered_map>
-// #include <unordered_map>
+// #include <tr1/unordered_map>
+#include <unordered_map>
 #include <string.h>
 #include <set>
 #include <map>
@@ -60,8 +60,8 @@ ull generate_hash_key(int board [][4]){
     return hash_key;
 }
 
-typedef std::tr1::unordered_map<ull, state> hash_table;
-// typedef std::unordered_map<ull, state> hash_table;
+// typedef std::tr1::unordered_map<ull, state> hash_table;
+typedef std::unordered_map<ull, state> hash_table;
 typedef std::multiset<state, state_cmp> mset;
 typedef mset::iterator set_it;
 typedef hash_table::iterator hash_it;
@@ -121,7 +121,7 @@ bool check_solution(ull board){
 }
 
 //HEURISTICS
-int heuristic_1(int board[][4]){ //HEURISTIC 1
+int heuristic(int board[][4]){ //HEURISTIC 1
     int heuristic = 0;
     for(int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {

@@ -1,10 +1,10 @@
 CC = g++ -std=c++11 main.cpp -o a.out -Wall
 
-runcodes: compile_runcodes rcodes
+runcodes: compile rcodes
 
-report: compile_runcodes tests
+report: compile tests
 
-compile_runcodes:
+compile:
 	g++ -std=c++11 15-puzzle.cpp -o a.out -Wall
 
 tests:
